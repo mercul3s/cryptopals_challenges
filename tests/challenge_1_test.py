@@ -1,5 +1,5 @@
 import unittest
-from set1 import hex_b64
+from set1 import challenge_1 
 
 class HexB64UnitTest(unittest.TestCase):
 
@@ -11,10 +11,10 @@ class HexB64UnitTest(unittest.TestCase):
 
 
     def test_dehex(self):
-        unhexed_string = hex_b64.dehex(self.hexed_string)
+        unhexed_string = challenge_1.dehex(self.hexed_string)
         self.assertEqual(unhexed_string, self.unhexed_string)
 
 
     def test_encode_string(self):
-        encoded_string = hex_b64.encode_string(self.unhexed_string)
+        encoded_string = challenge_1.encode_string(self.unhexed_string)
         self.assertEqual(encoded_string, self.b64_encoded_string)

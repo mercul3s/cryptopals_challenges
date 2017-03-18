@@ -1,5 +1,5 @@
 import unittest
-from set1 import fixed_xor
+from set1 import challenge_2 
 
 
 class FixedXorUnitTest(unittest.TestCase):
@@ -11,5 +11,5 @@ class FixedXorUnitTest(unittest.TestCase):
 
 
     def test_xor(self):
-        result = fixed_xor.xor_combination(self.buffer1, self.buffer2)
+        result = challenge_2.xor_combination(self.buffer1, self.buffer2)
         self.assertEqual(result, self.combination)

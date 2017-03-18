@@ -1,5 +1,5 @@
+from challenge_1 import dehex, tohex
 from sys import argv
-import hex_b64
 
 """
 
@@ -22,8 +22,8 @@ def xor_combination(hex1, hex2):
     if len(hex1) != len(hex2):
         raise "Error: hex strings are not equal length."
 
-    string1 = hex_b64.dehex(hex1)
-    string2 = hex_b64.dehex(hex2)
+    string1 = dehex(hex1)
+    string2 = dehex(hex2)
 
     # combine the letters of each string in sequence
     # so each can be compared numerically (char ordinal)
@@ -33,7 +33,7 @@ def xor_combination(hex1, hex2):
     
     result = "".join(chr(ord(x) ^ ord(y)) for x, y in zipped)
 
-    return hex_b64.tohex(result)
+    return tohex(result)
 
 
 def main():
