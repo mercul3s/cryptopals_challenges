@@ -17,7 +17,7 @@ Achievement Unlocked
 You now have our permission to make "ETAOIN SHRDLU" jokes on Twitter.
 """
 
-alphabet = string.lowercase + string.uppercase
+alphabet = string.printable
 freqs_english = {
                     'a': 8.167, 
                     'b':1.492, 
@@ -94,16 +94,18 @@ def decrypt(encoded_string):
     for letter in alphabet:
         decoded = xored(letter, dehexed)
         f_score = score(decoded)
-        scored_solutions[f_score] = decoded
+        scored_solutions[f_score] = (letter, decoded)
     lowest_value = sorted(scored_solutions)[0]
-    print scored_solutions[lowest_value]
+    # print scored_solutions[lowest_value]
     return scored_solutions[lowest_value]
 
 
 def main():
     if len(argv) > 1:
         hex_string = argv[1]
-        decrypt(hex_string)
+        decrypted_solutions = decrypt(hex_string)
+        lowest_value = sorted(decrypted_solutions)[0]
+        print decrypted_solutions[lowest_value]
     else:
         return "Please enter a hex string to decode."
 

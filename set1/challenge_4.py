@@ -1,5 +1,6 @@
 from sys import argv
 import challenge_3
+import string
 
 """
 Detect single-character XOR
@@ -10,22 +11,31 @@ Find it.
 (Your code from #3 should help.)
 """
 
-# lots of non printable characters
+# This prints out all potential matches, including the encoded
+# string - for better matching, run the decoded strings though
+# the scoring algorithm again and output the lowest scoring
+# match.
+# Decoded text: 'Now that the party is jumping' with XOR 5
 def check_encrypted_text(filename):
     f = open(filename, 'r')
-
+    result = None
     for line in f:
         line = line.strip("\n")
         if len(line) % 2 == 0:
             result = challenge_3.decrypt(line)
-            print "Encoded text is {} and decoded result is {}".format(line, result)
+
+            if all(c in string.printable for c in result[1]):
+                print "Encoded text is {}".format(line)
+                print "Decoded text is {}".format(result[1])
+                print "XOR char is {}\n".format(result[0])
 
 
 def main():
     if len(argv) > 1:
         check_encrypted_text(argv[1])
+        
     else:
-        return "Please enter a filename."
+        print "Please enter a filename."
 
 if __name__ == '__main__':
     main()

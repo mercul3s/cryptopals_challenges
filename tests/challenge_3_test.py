@@ -10,4 +10,5 @@ class Challenge3UnitTest(unittest.TestCase):
 
     def test_decrypt(self):
         result = challenge_3.decrypt(self.hex_encoded_string)
-        self.assertEqual(result, self.decrypted_string)
+        self.assertEqual(result[0], 'X')
+        self.assertEqual(result[1], self.decrypted_string)
