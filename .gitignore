@@ -1,1 +1,3 @@
 *.pyc
+tests/*.pyc
+set1/*.pyc
