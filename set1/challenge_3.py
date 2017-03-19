@@ -1,4 +1,5 @@
 from binascii import unhexlify
+from sys import argv
 import collections
 import string
 """
@@ -17,7 +18,6 @@ You now have our permission to make "ETAOIN SHRDLU" jokes on Twitter.
 """
 
 alphabet = string.lowercase + string.uppercase
-encoded_string = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 freqs_english = {
                     'a': 8.167, 
                     'b':1.492, 
@@ -48,33 +48,37 @@ freqs_english = {
                 }
 
 
-def decrypt(char, hex_string):
+def xored(char, hex_string):
     result = ""
     for l in hex_string:
         result += (chr(ord(char) ^ ord(l)))
     return result
 
 
-# determine character frequency of a string and return
-# the most frequenly occurring character
-# note: this returns the lowercase x, which decodes the 
-# unhexed string as 'cOOKINGmcSLIKEAPOUNDOFBACON'.
-# close, but not quite; the actual XOR'd char is uppercase X.
+# determine character frequency of a string, and
+# compare to the frequency map of characters in
+# english language. 
+
 def score(raw_string):
     frequency_percent = collections.defaultdict(int) 
     frequency_map = collections.defaultdict(int)
     for char in raw_string:
         frequency_map[char] = frequency_map.get(char, 0) + 1
     
+    # check the frequency of occurrence of printable
+    # chars against the frequency map of the string, 
+    # divided by the length of the string.
     for i in string.printable:
         frequency_percent[i] = 100 * float(frequency_map[i])/float(len(raw_string))
 
     frequency_score = 0
+    # create a list of key differences
     diffkeys = [k for k in freqs_english if freqs_english[k] != frequency_percent[k]]
     for k in diffkeys:
-        # print k, ':', freqs_english[k], '->', frequency_percent[k]
+
         frequency_score += abs((freqs_english[k] - frequency_percent[k]))
     # print "Overall frequency score: {}".format(frequency_score)
+    # print diffkeys
     return frequency_score
 
     # # sort the dict by value
@@ -84,13 +88,24 @@ def score(raw_string):
     # return freq_sort[-1]
 
 
-def main():
+def decrypt(encoded_string):
     dehexed = unhexlify(encoded_string)
+    scored_solutions = {}
     for letter in alphabet:
-        decoded = decrypt(letter, dehexed)
+        decoded = xored(letter, dehexed)
         f_score = score(decoded)
-        if f_score < 80.0:
-            print "Letter is {}, decoded string is {}, frequency score is {}\n".format(letter, decoded, f_score)
+        scored_solutions[f_score] = decoded
+    lowest_value = sorted(scored_solutions)[0]
+    print scored_solutions[lowest_value]
+    return scored_solutions[lowest_value]
+
+
+def main():
+    if len(argv) > 1:
+        hex_string = argv[1]
+        decrypt(hex_string)
+    else:
+        return "Please enter a hex string to decode."
 
 if __name__ == '__main__':
     main()
