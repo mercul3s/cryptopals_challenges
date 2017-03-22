@@ -15,7 +15,8 @@ Find it.
 # string - for better matching, run the decoded strings though
 # the scoring algorithm again and output the lowest scoring
 # match.
-# Decoded text: 'Now that the party is jumping' with XOR 5
+# Decoded text: 'Now that the party is jumping' against XOR 5
+# Encoded string: '7b5a4215415d544115415d5015455447414c155c46155f4058455c5b523f'
 def check_encrypted_text(filename):
     f = open(filename, 'r')
     result = None
