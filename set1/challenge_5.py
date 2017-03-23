@@ -1,4 +1,4 @@
-from binascii import hexlify
+from binascii import hexlify, unhexlify
 """
 Implement repeating-key XOR
 Here is the opening stanza of an important work of the English language:
@@ -22,31 +22,24 @@ def encrypt(key, text):
     Takes a key(string), text(string) and returns a hex
     encoded string XOR encrypted against the key.
     """
+    result = split_text(key, text)
+    return hexlify(result)
 
-    # split the string into chunks based on the size of the key
-    # zip chunks, call xor fun
-    # if there are any remaining chars in the string,
-    # split the key based on the size of remaining chars
-    # finally, hex encode and return
+def decrypt(key, encrypted_text):
+    """
+    Takes a hex-encoded, XORed string and returns
+    decoded plain text.
+    """
+    hex_removed = unhexlify(encrypted_text)
+    result = split_text(key, hex_removed)
+    return result
+
+def split_text(key, text):
     result = ""
     for i in range(0, len(text), len(key)):
-        
         zipped = zip(key, text[i:(i + len(key))])
         result += "".join(char_xor(k, t) for k, t in zipped)
-        print "Text is {}, result is {}".format(text[i:(i + len(key))], result)
-
-    return hex_encode(result)
-
-
-def split_text(key_length, text):
-    pass
-
-
-def hex_encode(text):
-    """
-    Encodes a text string to hex using binascii lib.
-    """
-    return hexlify(text)
+    return result
 
 
 def char_xor(key_char, text_char):
