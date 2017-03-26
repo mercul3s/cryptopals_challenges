@@ -34,6 +34,10 @@ def decrypt(key, encrypted_text):
     result = split_text(key, hex_removed)
     return result
 
+
+# Should be able to do this as a recursive function. Think about
+# the way Elixir and Clojure loop over sets of data - head | tail
+# and recur the tail.
 def split_text(key, text):
     result = ""
     for i in range(0, len(text), len(key)):

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 """
 Break repeating-key XOR
 It is officially on, now.
@@ -15,8 +16,11 @@ this is a test
 and
 wokka wokka!!!
 is 37. Make sure your code agrees before you proceed.
+
 For each KEYSIZE, take the first KEYSIZE worth of bytes, and the second KEYSIZE worth of bytes, and find the edit distance between them. Normalize this result by dividing by KEYSIZE.
+
 The KEYSIZE with the smallest normalized edit distance is probably the key. You could proceed perhaps with the smallest 2-3 KEYSIZE values. Or take 4 KEYSIZE blocks instead of 2 and average the distances.
+
 Now that you probably know the KEYSIZE: break the ciphertext into blocks of KEYSIZE length.
 Now transpose the blocks: make a block that is the first byte of every block, and a block that is the second byte of every block, and so on.
 Solve each block as if it was single-character XOR. You already have code to do this.
@@ -27,9 +31,58 @@ No, that's not a mistake.
 We get more tech support questions for this challenge than any of the other ones. We promise, there aren't any blatant errors in this text. In particular: the "wokka wokka!!!" edit distance really is 37.
 """
 
+
+def normalized_hamming(keysize, filename):
+    """
+    Takes an int (keysize) and a file handler, and computes 
+    the hamming distance of 4 sequential blocks of length keysize
+    from the file. Returns a normalized hamming distance value as a int.
+    """
+
+    blocks = []
+    distances = []
+    for num in range(4):
+        blocks.append(filename.read(keysize))
+
+    for i, val in enumerate(blocks):
+        while len(distances) <= 3:
+            hamm_dist = hamming(blocks[i], blocks[i + 1])
+            distances.append(hamm_dist)
+
+    hamming_norm = sum(distances) / len(distances)
+    return hamming_norm
+
+
 def hamming(string1, string2):
     """
     Computes the hamming distance (bit # difference)
-    of two strings. Returns an int.
+    of two equal length strings. Returns an int.
+    For binary strings a and b the Hamming distance is
+    equal to the number of ones (population count)
+    in a XOR b. 
     """
-    return "Not an int"
+
+    if len(string1) == len(string2):
+        counter = 0
+        for i in range(0, len(string1)):
+            diff = format(ord(string1[i]) ^ ord(string2[i]), 'b')
+            # print "XOR diff is {}".format(diff)
+            for d in diff:
+                if int(d) > 0:
+                    counter += int(d)
+        return counter
+    return "Error: string length unequal"
+
+
+def main():
+    keys_and_hamming_distance_dict = {}
+    for key_len in range(2, 41):
+        f = open("set1/challenge_6_data.txt", 'r')
+        normalized_dist = find_key(key_len, f)
+        keys_and_hamming_distance_dict[key_len] = normalized_dist
+        f.close()
+    potential_key_lengths = sorted(keys_and_hamming_distance_dict.iteritems(), key=lambda (k, v): (v, k))[0:3]
+    print potential_key_lengths
+
+if __name__ == '__main__':
+    main()
