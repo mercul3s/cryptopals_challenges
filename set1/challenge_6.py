@@ -1,4 +1,4 @@
-from collections import OrderedDict
+import challenge_3
 """
 Break repeating-key XOR
 It is officially on, now.
@@ -74,11 +74,46 @@ def hamming(string1, string2):
     return "Error: string length unequal"
 
 
+def cipher_block(keysize, ciphertext):
+    """
+    Now that you probably know the KEYSIZE: break the ciphertext into blocks of KEYSIZE length.
+    """
+    # iterate over ciphertext
+    # take keysize number of bytes from text
+    # append that to the blocklist
+    text = ciphertext.read()
+    block_list = []
+    for i in range(0, len(text), keysize):
+        block_list.append(text[i:i + keysize])
+    return block_list
+
+
+def transpose_cipher(keysize, block_list):
+    """
+    Now transpose the blocks: make a block that is the first byte of every block, and a block that is the second byte of every block, and so on.
+    """
+    transposed_block_list = []   
+    for i in range(keysize):
+        transposed_block_list.append("".join(block[i] for block in block_list))
+    return transposed_block_list
+
+
+def solve_xor(transposed_block_list):
+    """
+    Solve each block as if it was single-character XOR. You already have code to do this.
+    For each block, the single-byte XOR key that produces the best looking histogram 
+    is the repeating-key XOR key byte for that block. Put them together and you have the key.
+    """
+    for block in transposed_block_list:
+        print block
+        solutions = challenge_3.decrypt(block)
+        print solutions
+
 def main():
     keys_and_hamming_distance_dict = {}
     for key_len in range(2, 41):
         f = open("set1/challenge_6_data.txt", 'r')
-        normalized_dist = find_key(key_len, f)
+        normalized_dist = normalized_hamming(key_len, f)
         keys_and_hamming_distance_dict[key_len] = normalized_dist
         f.close()
     potential_key_lengths = sorted(keys_and_hamming_distance_dict.iteritems(), key=lambda (k, v): (v, k))[0:3]
